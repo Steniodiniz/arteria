@@ -1,0 +1,394 @@
+This is a complete HTML document that transforms your business mentorship report into an interactive, scrollytelling-style SPA dashboard with charts, a strategic map, and team data visualization.
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Artéria | Infográfico Estratégico StartBSB</title>
+    <!-- Tailwind CSS + Plus Jakarta Sans -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- Custom font override -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+        }
+        body {
+            background: #f8fafc;
+            scroll-behavior: smooth;
+        }
+        /* glassmorphism para cards interativos */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(4px);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .glass-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.15);
+        }
+        .scroll-fade {
+            animation: fadeUp 0.6s ease-out;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .badge-pill {
+            transition: all 0.2s;
+        }
+        .stat-number {
+            font-feature-settings: "tnum";
+            font-variant-numeric: tabular-nums;
+        }
+        /* diagram flex custom */
+        .flow-arrow::after {
+            content: "→";
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2563eb;
+            margin: 0 0.5rem;
+        }
+        @media (max-width: 768px) {
+            .flow-arrow::after {
+                content: "↓";
+                display: block;
+                margin: 0.5rem 0;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- NAV / HEADER HERO -->
+    <section class="relative bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a] text-white overflow-hidden">
+        <div class="absolute top-0 right-0 w-96 h-96 bg-[#2563eb] rounded-full blur-[100px] opacity-20"></div>
+        <div class="max-w-7xl mx-auto px-6 py-12 md:py-20 relative z-10">
+            <div class="flex flex-wrap justify-between items-start gap-4">
+                <div>
+                    <span class="inline-flex items-center gap-2 bg-[#2563eb]/20 text-[#60a5fa] text-sm font-medium px-4 py-1 rounded-full border border-[#2563eb]/40">📡 StartBSB · Fase II (Incubação)</span>
+                    <h1 class="text-4xl md:text-6xl font-bold mt-6 tracking-tight">Artéria <span class="text-[#60a5fa]">Tubulações Sustentáveis</span></h1>
+                    <p class="text-lg text-gray-300 max-w-2xl mt-4 leading-relaxed">Economia circular: pneus descartados transformados em tubulações agrícolas com redução de 83% de perda de água e custo 58% menor.</p>
+                </div>
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl px-5 py-3 border border-white/20">
+                    <p class="text-xs uppercase tracking-wider text-gray-300">Sessão Mentoria</p>
+                    <p class="font-bold text-xl">05 Abril 2026</p>
+                    <p class="text-sm text-[#93c5fd]">Stenio Diniz (Mentor) | Karen Negreiros</p>
+                </div>
+            </div>
+            <!-- mini grid de KPI -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12">
+                <div class="bg-white/5 rounded-2xl p-4 border border-white/10">
+                    <p class="text-gray-300 text-sm">⬇️ Redução desperdício</p>
+                    <p class="text-3xl font-bold text-[#10b981]">83%</p>
+                </div>
+                <div class="bg-white/5 rounded-2xl p-4 border border-white/10">
+                    <p class="text-gray-300 text-sm">💰 Custo competitivo</p>
+                    <p class="text-3xl font-bold text-[#10b981]">-58%</p>
+                </div>
+                <div class="bg-white/5 rounded-2xl p-4 border border-white/10">
+                    <p class="text-gray-300 text-sm">♻️ Meta anual pneus</p>
+                    <p class="text-3xl font-bold text-[#facc15]">1 tonelada</p>
+                </div>
+                <div class="bg-white/5 rounded-2xl p-4 border border-white/10">
+                    <p class="text-gray-300 text-sm">🏆 Histórico Fomento</p>
+                    <p class="text-3xl font-bold text-[#facc15]">R$10k</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SCROLLY TELLING : CONTEÚDO PRINCIPAL -->
+    <main class="max-w-7xl mx-auto px-6 py-12 md:py-16 space-y-16">
+        
+        <!-- SEÇÃO INFOGRAFIA: OS 6 AGENTES ESTRATÉGICOS  (Cards) -->
+        <div class="scroll-fade">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="h-8 w-1 bg-[#2563eb] rounded-full"></div>
+                <h2 class="text-2xl md:text-3xl font-bold text-[#0f172a]">🎯 Diagnóstico por Agentes</h2>
+                <span class="text-sm bg-gray-100 px-3 py-1 rounded-full text-gray-600">StartBSB Mentoria</span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Produto -->
+                <div class="bg-white rounded-3xl shadow-xl border border-gray-100 p-5 hover:shadow-2xl transition">
+                    <div class="flex items-center gap-2 mb-3"><span class="text-3xl">📦</span><h3 class="font-bold text-xl">Agente Produto</h3></div>
+                    <p class="text-sm text-gray-500 mb-3">Diferenciação: borracha reciclada + flexibilidade</p>
+                    <div class="bg-green-50 p-3 rounded-xl text-sm"><span class="font-semibold text-green-700">✅ Força:</span> eficiência 83% em escala reduzida.</div>
+                    <div class="bg-red-50 p-3 rounded-xl text-sm mt-2"><span class="font-semibold text-red-600">⚠️ Atenção:</span> sem detalhes de automação/sensores; ausência de certificações técnicas.</div>
+                    <div class="text-xs text-gray-500 mt-3 border-t pt-2">📌 Recomendação: definir requisitos para prototipagem final + sensores de fluxo básicos.</div>
+                </div>
+                <!-- Mercado -->
+                <div class="bg-white rounded-3xl shadow-xl border border-gray-100 p-5 hover:shadow-2xl transition">
+                    <div class="flex items-center gap-2 mb-3"><span class="text-3xl">🌾</span><h3 class="font-bold text-xl">Agente Mercado</h3></div>
+                    <p class="text-sm text-gray-500">Foco: agricultura familiar e cooperativas</p>
+                    <div class="bg-green-50 p-3 rounded-xl text-sm"><span class="font-semibold text-green-700">✅ Força:</span> custo 58% econômico; público alvo definido.</div>
+                    <div class="bg-red-50 p-3 rounded-xl text-sm mt-2"><span class="font-semibold text-red-600">⚠️ Atenção:</span> dependência de editais públicos/ONGs, barreira de adoção por desconfiança.</div>
+                    <div class="text-xs text-gray-500 mt-3 border-t pt-2">📌 Recomendação: mapear 3 principais cooperativas do DF para testes de impacto social.</div>
+                </div>
+                <!-- Finanças -->
+                <div class="bg-white rounded-3xl shadow-xl border border-gray-100 p-5 hover:shadow-2xl transition">
+                    <div class="flex items-center gap-2 mb-3"><span class="text-3xl">💰</span><h3 class="font-bold text-xl">Agente Finanças</h3></div>
+                    <p class="text-sm text-gray-500">Gestão de subvenção + histórico StartBSB</p>
+                    <div class="bg-green-50 p-3 rounded-xl text-sm"><span class="font-semibold text-green-700">✅ Força:</span> experiência prévia com R$10k (2024), capacidade de gestão.</div>
+                    <div class="bg-red-50 p-3 rounded-xl text-sm mt-2"><span class="font-semibold text-red-600">⚠️ Atenção:</span> vedação de salários pela FAPDF; necessidade de plano de rateio das bolsas (limite 40%).</div>
+                    <div class="text-xs text-gray-500 mt-3 border-t pt-2">📌 Recomendação: elaborar quadro de usos e fontes (capital vs custeio).</div>
+                </div>
+                <!-- Pessoas -->
+                <div class="bg-white rounded-3xl shadow-xl border border-gray-100 p-5 hover:shadow-2xl transition">
+                    <div class="flex items-center gap-2 mb-3"><span class="text-3xl">👥</span><h3 class="font-bold text-xl">Agente Pessoas</h3></div>
+                    <p class="text-sm text-gray-500">Equipe multidisciplinar + liderança jovem</p>
+                    <div class="bg-green-50 p-3 rounded-xl text-sm"><span class="font-semibold text-green-700">✅ Força:</span> Biologia, Eng. Elétrica, Agronegócio, Ecologia. Premiações (FEBRACE).</div>
+                    <div class="bg-red-50 p-3 rounded-xl text-sm mt-2"><span class="font-semibold text-red-600">⚠️ Atenção:</span> dedicação parcial (engenharia/freelancers) - gargalo de execução técnica.</div>
+                    <div class="text-xs text-gray-500 mt-3 border-t pt-2">📌 Recomendação: formalizar declarações de anuência e atualizar Lattes conforme edital.</div>
+                </div>
+                <!-- Operações -->
+                <div class="bg-white rounded-3xl shadow-xl border border-gray-100 p-5 hover:shadow-2xl transition">
+                    <div class="flex items-center gap-2 mb-3"><span class="text-3xl">⚙️</span><h3 class="font-bold text-xl">Agente Operações</h3></div>
+                    <p class="text-sm text-gray-500">Infraestrutura + gargalo produção</p>
+                    <div class="bg-green-50 p-3 rounded-xl text-sm"><span class="font-semibold text-green-700">✅ Força:</span> CNPJ ativo, testes validados no DF.</div>
+                    <div class="bg-red-50 p-3 rounded-xl text-sm mt-2"><span class="font-semibold text-red-600">⚠️ Atenção:</span> gargalo de trituração e moldagem; logística reversa de pneus não detalhada.</div>
+                    <div class="text-xs text-gray-500 mt-3 border-t pt-2">📌 Recomendação: lista de equipamentos prioritários (despesas de capital) respeitando edital.</div>
+                </div>
+                <!-- Prestação de Contas -->
+                <div class="bg-white rounded-3xl shadow-xl border border-gray-100 p-5 hover:shadow-2xl transition">
+                    <div class="flex items-center gap-2 mb-3"><span class="text-3xl">📋</span><h3 class="font-bold text-xl">Prestação de Contas</h3></div>
+                    <p class="text-sm text-gray-500">Metas & conformidade FAPDF</p>
+                    <div class="bg-amber-50 p-2 rounded-lg text-sm"><span class="font-semibold">Meta 1:</span> Prototipagem final (prazo crítico).</div>
+                    <div class="bg-amber-50 p-2 rounded-lg text-sm mt-1"><span class="font-semibold">Meta 5:</span> Divulgação científica.</div>
+                    <div class="bg-red-50 p-2 rounded-lg text-sm mt-2"><span class="font-semibold text-red-700">🚨 Risco:</span> cronograma com data inconsistente (2016 vs 2025-26). Necessário revisão imediata.</div>
+                    <div class="text-xs text-gray-500 mt-2">Recomendação: alinhar anexo de metas e verificar CNAE + certidões negativas (CNDT, FGTS).</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GRÁFICOS CHART.JS: IMPACTO E COMPETITIVIDADE + VALIDAÇÃO -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 scroll-fade">
+            <!-- Gráfico 1: Comparativo Custo e Eficiência -->
+            <div class="bg-white rounded-3xl shadow-xl p-6 border border-gray-100">
+                <h3 class="font-bold text-xl flex items-center gap-2 text-[#0f172a]"><span class="w-2 h-6 bg-[#2563eb] rounded-full"></span> Benchmark competitivo</h3>
+                <canvas id="comparisonChart" width="400" height="300" style="max-height: 320px; width:100%"></canvas>
+                <p class="text-xs text-gray-500 mt-2 text-center">Fonte: StartBSB Mentoria / Testes de campo escala reduzida</p>
+            </div>
+            <!-- Gráfico 2: Composição da Equipe Técnica (multidisciplinar) e pontos de atenção -->
+            <div class="bg-white rounded-3xl shadow-xl p-6 border border-gray-100">
+                <h3 class="font-bold text-xl flex items-center gap-2 text-[#0f172a]"><span class="w-2 h-6 bg-[#10b981] rounded-full"></span> Engajamento da equipe</h3>
+                <canvas id="teamChart" width="400" height="300" style="max-height: 320px; width:100%"></canvas>
+                <p class="text-xs text-gray-500 mt-2 text-center">Dedicação atual vs ideal para execução técnica</p>
+            </div>
+        </div>
+
+        <!-- DIAGRAMA FLUXO OPERACIONAL: PIVOTAGEM (HTML + TAILWIND) -->
+        <div class="bg-white rounded-3xl shadow-xl p-6 md:p-8 scroll-fade border border-gray-100">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-6">
+                <h3 class="font-bold text-2xl text-[#0f172a]">🔄 Vale da Morte Operacional: fluxo de escalonamento</h3>
+                <span class="bg-gray-100 px-3 py-1 rounded-full text-sm font-mono">canvas pneus → tubulação sustentável</span>
+            </div>
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-2">
+                <!-- Caixa 1 -->
+                <div class="bg-gradient-to-br from-slate-50 to-gray-100 rounded-2xl p-4 w-full md:w-1/4 text-center shadow-md border border-gray-200">
+                    <div class="text-3xl mb-2">🚛</div>
+                    <div class="font-bold">Logística reversa</div>
+                    <div class="text-xs text-gray-500 mt-1">Coleta pneus descartados<br>(450 mil ton/ano Brasil)</div>
+                    <div class="mt-2 text-[#ef4444] text-xs bg-red-50 p-1 rounded">⚠️ não detalhada</div>
+                </div>
+                <div class="text-2xl text-[#2563eb] font-bold hidden md:block">→</div>
+                <div class="text-3xl text-[#2563eb] md:hidden my-1">↓</div>
+                <!-- Caixa 2 -->
+                <div class="bg-gradient-to-br from-slate-50 to-gray-100 rounded-2xl p-4 w-full md:w-1/4 text-center shadow-md border border-gray-200">
+                    <div class="text-3xl mb-2">⚙️</div>
+                    <div class="font-bold">Trituração & moldagem</div>
+                    <div class="text-xs text-gray-500 mt-1">Pó de borracha reciclada → tubos</div>
+                    <div class="mt-2 text-[#f97316] text-xs bg-orange-50 p-1 rounded">🚧 Gargalo crítico (equipamentos)</div>
+                </div>
+                <div class="text-2xl text-[#2563eb] font-bold hidden md:block">→</div>
+                <div class="text-3xl text-[#2563eb] md:hidden my-1">↓</div>
+                <!-- Caixa 3 -->
+                <div class="bg-gradient-to-br from-slate-50 to-gray-100 rounded-2xl p-4 w-full md:w-1/4 text-center shadow-md border border-gray-200">
+                    <div class="text-3xl mb-2">🌱</div>
+                    <div class="font-bold">Validação de campo</div>
+                    <div class="text-xs text-gray-500 mt-1">Testes durabilidade e irrigação</div>
+                    <div class="mt-2 text-[#10b981] text-xs bg-green-50 p-1 rounded">✔️ Redução 83% perda d'água (escala pequena)</div>
+                </div>
+                <div class="text-2xl text-[#2563eb] font-bold hidden md:block">→</div>
+                <div class="text-3xl text-[#2563eb] md:hidden my-1">↓</div>
+                <!-- Caixa 4 -->
+                <div class="bg-gradient-to-br from-[#2563eb] to-[#1e40af] text-white rounded-2xl p-4 w-full md:w-1/4 text-center shadow-lg">
+                    <div class="text-3xl mb-2">🏭</div>
+                    <div class="font-bold">Industrial escala</div>
+                    <div class="text-xs opacity-90 mt-1">Capacidade: 1 tonelada pneus/ano</div>
+                    <div class="mt-2 text-white text-xs bg-black/20 rounded p-1">⭐ Meta StartBSB: prototipagem final</div>
+                </div>
+            </div>
+            <div class="mt-8 flex flex-wrap justify-between gap-4 text-sm bg-gray-50 p-4 rounded-2xl">
+                <div><span class="font-bold text-[#ef4444]">‼️ Risco principal: </span>ausência de equipamentos industriais (trituração/moldagem) inviabiliza escala</div>
+                <div><span class="font-bold text-[#2563eb]">🎯  Próxima ação: </span>detalhar especificações técnicas para despesas de capital – edital StartBSB Fase II</div>
+            </div>
+        </div>
+
+        <!-- PAINEL DE METAS E PRAZOS + CRTÍTICO DE CERTIFICAÇÃO -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 scroll-fade">
+            <div class="bg-white rounded-3xl shadow-xl p-6 border border-gray-100">
+                <h3 class="font-bold text-xl flex items-center gap-2"><span class="w-2 h-5 bg-[#ef4444] rounded-full"></span> Metas críticas & Habilitação</h3>
+                <ul class="mt-4 space-y-3">
+                    <li class="flex items-start gap-3"><span class="text-red-500">⚠️</span><span><span class="font-semibold">Meta 1 (Prototipagem final):</span> Prazo inconsistente (10/07/2016) → <strong>Revisar imediatamente para 2026</strong></span></li>
+                    <li class="flex items-start gap-3"><span class="text-red-500">⚠️</span><span><span class="font-semibold">Meta 5 (Divulgação científica):</span> 10/10/2016 também fora do ciclo FAPDF 2025-26.</span></li>
+                    <li class="flex items-start gap-3"><span class="text-amber-600">📌</span><span><span class="font-semibold">CNAE compatível:</span> Verificar se CNPJ reflete produção de tubulações sob pena de desclassificação.</span></li>
+                    <li class="flex items-start gap-3"><span class="text-amber-600">📌</span><span><span class="font-semibold">Certidões Negativas:</span> CNDT, FGTS, Receita Federal obrigatórias antes da liberação.</span></li>
+                </ul>
+                <div class="mt-5 bg-[#fef2f2] border-l-4 border-[#ef4444] p-3 rounded-xl">
+                    <p class="text-sm font-medium">⚠️ Alerta CEO: “O rigor com a prestação de contas é tão vital quanto a inovação do produto.”</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-3xl shadow-xl p-6 border border-gray-100">
+                <h3 class="font-bold text-xl flex items-center gap-2"><span class="w-2 h-5 bg-[#10b981] rounded-full"></span> Quadro “Usos & Fontes” (Estratégico)</h3>
+                <div class="mt-3 space-y-3">
+                    <div class="flex justify-between border-b pb-2"><span class="font-medium">Despesas de Capital (Equipamentos)</span><span class="font-bold text-[#2563eb]">Prioridade máxima</span></div>
+                    <div class="flex justify-between border-b pb-2"><span class="font-medium">Custeio operacional (bolsas de estímulo)</span><span class="text-amber-600">Limite 40% Fase II</span></div>
+                    <div class="flex justify-between"><span class="font-medium">Recursos próprios da empreendedora</span><span class="text-gray-600">Fôlego para despesas administrativas (salários vetados)</span></div>
+                </div>
+                <div class="mt-6 p-3 bg-blue-50 rounded-xl">
+                    <p class="text-sm"><span class="font-bold">📌 Recomendação financeira:</span> apresentar detalhamento da subvenção e planejar rateio de bolsas para não comprometer capital de equipamentos.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PERGUNTA ESTRATÉGICA & SÍNTESE -->
+        <div class="bg-gradient-to-r from-[#0f172a] to-[#1e293b] rounded-3xl shadow-2xl p-6 md:p-8 text-white scroll-fade">
+            <div class="flex flex-wrap gap-4 justify-between items-start">
+                <div>
+                    <p class="text-[#60a5fa] font-semibold tracking-wide">❓ Questão-Chave do Mentor</p>
+                    <p class="text-xl md:text-2xl font-medium max-w-3xl mt-1">“Como garantir padronização química da borracha reciclada para durabilidade constante em diferentes lotes de pneus?”</p>
+                </div>
+                <div class="bg-[#2563eb]/30 rounded-full px-5 py-2 border border-[#2563eb] text-sm font-mono">🏭 desafio técnico crítico</div>
+            </div>
+            <div class="mt-6 pt-4 border-t border-gray-700 flex flex-wrap justify-between gap-3">
+                <div><span class="font-bold">🧠 Visão Integrada:</span> alto impacto ambiental, mas “Vale da Morte” operacional – equipamentos são a alavanca.</div>
+                <div><span class="font-bold">📋 Painel de Avanço:</span> Baseline inicial, startup habilitada para Fase II (Incubação).</div>
+            </div>
+        </div>
+
+        <!-- PRÓXIMOS PASSOS (PLANO DE AÇÃO) -->
+        <div class="bg-white rounded-3xl shadow-xl p-6 scroll-fade border border-gray-200">
+            <div class="flex flex-wrap justify-between items-center gap-3 border-b pb-4 mb-4">
+                <h3 class="text-2xl font-bold text-[#0f172a]">📋 Plano de Ação – Próxima Sessão</h3>
+                <span class="bg-[#2563eb]/10 text-[#2563eb] px-3 py-1 rounded-full text-sm">Deadline: alinhamento estratégico</span>
+            </div>
+            <div class="grid md:grid-cols-3 gap-4">
+                <div class="flex gap-2 items-start"><span class="bg-gray-100 text-[#0f172a] rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">1</span><span>Saneamento administrativo: corrigir datas das metas (2016→2025/2026).</span></div>
+                <div class="flex gap-2 items-start"><span class="bg-gray-100 text-[#0f172a] rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">2</span><span>Dossiê de equipe: coletar anuências + atualização Lattes.</span></div>
+                <div class="flex gap-2 items-start"><span class="bg-gray-100 text-[#0f172a] rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">3</span><span>Planejamento de compras: especificações técnicas para cotação de equipamentos.</span></div>
+            </div>
+            <div class="mt-6 bg-amber-50 p-4 rounded-xl text-sm font-medium text-amber-800">✅ Tema crítico de prestação de contas: regularidade fiscal e trabalhista é pré-requisito para desembolso.</div>
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 mt-16 py-8 text-center text-sm text-gray-500">
+        <p>Artéria · Mentoria StartBSB · Relatório Sessão 01 | Dados baseados em diagnóstico de negócio · Infográfico interativo com Chart.js e Tailwind</p>
+        <p class="text-xs mt-1">Estratégia baseada em Economia Circular e validação de campo | Prospecção de cooperativas DF</p>
+    </footer>
+
+    <script>
+        // CHART.JS CONFIG - TRATAMENTO LABELS LONGOS (Array e tooltip multiline)
+        // Gráfico 1 - Benchmark competitivo (eficiência hídrica + custo relativo)
+        const ctx1 = document.getElementById('comparisonChart').getContext('2d');
+        new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: [
+                    ['Soluções', 'tradicionais (canais/manilhas)'],
+                    ['Artéria', 'tubulação sustentável']
+                ],
+                datasets: [
+                    {
+                        label: 'Eficiência hídrica (%)',
+                        data: [45, 83],
+                        backgroundColor: '#2563eb',
+                        borderRadius: 12,
+                        barPercentage: 0.6
+                    },
+                    {
+                        label: 'Custo relativo (índice base 100)',
+                        data: [100, 42],
+                        backgroundColor: '#10b981',
+                        borderRadius: 12,
+                        barPercentage: 0.6
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            title: function(tooltipItems) {
+                                let labelArr = tooltipItems[0].label;
+                                if (typeof labelArr === 'string' && labelArr.includes(',')) return labelArr;
+                                if (Array.isArray(labelArr)) return labelArr.join(' ');
+                                return labelArr;
+                            },
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                let val = context.raw;
+                                if (context.dataset.label.includes('Eficiência')) return `${label}: ${val}% redução de perda`;
+                                if (context.dataset.label.includes('Custo')) return `${label}: ${val} (58% menor)`;
+                                return `${label}: ${val}`;
+                            }
+                        }
+                    },
+                    legend: { position: 'top' }
+                },
+                scales: {
+                    y: { title: { display: true, text: 'Percentual / Índice', color: '#334155' }, grid: { color: '#e2e8f0' } },
+                    x: { ticks: { font: { size: 11 } } }
+                }
+            }
+        });
+
+        // Gráfico 2 - equipe: dedicação atual parcial vs necessário (em horas semanais hipotéticas)
+        const ctx2 = document.getElementById('teamChart').getContext('2d');
+        new Chart(ctx2, {
+            type: 'bar',
+            data: {
+                labels: ['Engenharia', 'Especialistas (Bio/Eco/Agro)', 'Coordenação'],
+                datasets: [
+                    {
+                        label: 'Dedicação média atual (h/semana)',
+                        data: [14, 12, 35],
+                        backgroundColor: '#f97316',
+                        borderRadius: 10,
+                    },
+                    {
+                        label: 'Horas necessárias p/ execução ideal',
+                        data: [35, 30, 40],
+                        backgroundColor: '#2563eb',
+                        borderRadius: 10,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            title: (items) => items[0].label,
+                            label: (ctx) => `${ctx.dataset.label}: ${ctx.raw} horas/semana | Gargalo crítico para automação`
+                        }
+                    },
+                    legend: { position: 'top' }
+                },
+                scales: {
+                    y: { title: { display: true, text: 'Horas semanais' }, beginAtZero: true, max: 50 }
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>
+```
